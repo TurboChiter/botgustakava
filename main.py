@@ -112,7 +112,7 @@ async def message(message: types.Message):
 
 	#-----------
 	if not db.check(userid):
-		file = open("F:\\Bot GustoKava\\users.txt", "rb")
+		file = open("users.txt", "rb")
 		codes = str(file.read()).replace("b", "").replace("'", "").split("\\r\\n")
 		print(codes)
 		if message.text in codes:
