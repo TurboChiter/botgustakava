@@ -223,7 +223,7 @@ def updater():
 
 		# Параметры аутентификации GitHub
 		username = 'TurboChiter'
-		token = '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'
+		token = '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'
 
 		# Параметры репозитория и файла
 		repo_owner = 'TurboChiter'
