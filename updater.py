@@ -1,11 +1,12 @@
 import requests
 import threading
+import base64
 import time
 
 def update_github_file():
     # Параметры аутентификации GitHub
     username = 'TurboChiter'
-    token = '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'
+    token = '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'
 
     # Параметры репозитория и файла
     repo_owner = 'TurboChiter'
@@ -20,6 +21,9 @@ def update_github_file():
     with open(local_file_path, 'rb') as file:
         content = file.read()
 
+    # Кодирование содержимого в base64
+    content_base64 = base64.b64encode(content).decode('utf-8')
+
     # Заголовки запроса с параметрами аутентификации
     headers = {
         'Authorization': f'token {token}',
@@ -29,14 +33,16 @@ def update_github_file():
     # Параметры запроса
     params = {
         'message': 'Обновление файла',
-        'content': content,
-        'sha': None  # SHA хэш существующего файла, получите его с помощью API GitHub (GET /repos/:owner/:repo/contents/:path)
+        'content': content_base64,
+        'sha': None
     }
 
     # Получение информации о файле для получения текущего SHA
-    response = requests.get(url, headers=headers)
+    response = requests.get(url)
     response_json = response.json()
-    params['sha'] = response_json['sha']
+    sha = response_json['sha']
+    print(f"SHA: {sha}")
+    params['sha'] = sha
 
     # Обновление файла
     response = requests.put(url, headers=headers, json=params)
