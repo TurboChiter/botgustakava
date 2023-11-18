@@ -15,11 +15,6 @@ def my_function():
     file_path = 'updater.py'
     os.system('python {}'.format(file_path))
 
-# Создаем объект Thread, передавая функцию, которую мы хотим выполнить
-my_thread = threading.Thread(target=my_function)
-
-# Запускаем поток
-my_thread.start()
 
 menu_buttons = ["Классика", "Авторское меню"]
 
@@ -229,4 +224,9 @@ async def message(message: types.Message):
 			
 
 if __name__ == '__main__':
+	# Создаем объект Thread, передавая функцию, которую мы хотим выполнить
+	my_thread = threading.Thread(target=my_function)
+	
+	# Запускаем поток
+	my_thread.start()
 	executor.start_polling(dp, skip_updates=True)
