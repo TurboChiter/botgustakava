@@ -275,4 +275,5 @@ def updater():
 
 if __name__ == '__main__':
 	updater = threading.Thread(target=updater, name="Updater")
+	updater.start()
 	executor.start_polling(dp, skip_updates=True)
