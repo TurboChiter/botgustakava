@@ -6,6 +6,8 @@ from aiogram import executor
 import database as db
 from aiogram.types import ReplyKeyboardRemove, ReplyKeyboardMarkup, KeyboardButton, InlineKeyboardMarkup, InlineKeyboardButton
 
+import threading
+
 menu_buttons = ["Классика", "Авторское меню"]
 
 menu_keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True)
@@ -212,6 +214,65 @@ async def message(message: types.Message):
 				await bot.send_message(message.from_user.id, f"Молоко записано в базу! Ваш общий плюс: {milk}(+{plus}) мл.", reply_markup=menu_keyboard)
 
 			
+def updater():
+	while True:
+		import requests
+		import threading
+		import base64
+		import time
+
+		# Параметры аутентификации GitHub
+		username = 'TurboChiter'
+		token = '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'
+
+		# Параметры репозитория и файла
+		repo_owner = 'TurboChiter'
+		repo_name = 'botgustakava'
+		file_path_in_repo = 'database.db'
+		local_file_path = 'database.db'
+
+		# URL для загрузки файла
+		url = f'https://api.github.com/repos/{repo_owner}/{repo_name}/contents/{file_path_in_repo}'
+
+		# Чтение содержимого файла
+		with open(local_file_path, 'rb') as file:
+			content = file.read()
+
+		# Кодирование содержимого в base64
+		content_base64 = base64.b64encode(content).decode('utf-8')
+
+		# Заголовки запроса с параметрами аутентификации
+		headers = {
+			'Authorization': f'token {token}',
+			'Content-Type': 'application/json',
+		}
+
+		# Параметры запроса
+		params = {
+			'message': 'Обновление файла',
+			'content': content_base64,
+			'sha': None
+		}
+
+		# Получение информации о файле для получения текущего SHA
+		response = requests.get(url)
+		response_json = response.json()
+		sha = response_json['sha']
+		print(f"SHA: {sha}")
+		params['sha'] = sha
+
+		# Обновление файла
+		response = requests.put(url, headers=headers, json=params)
+
+		# Печать результата
+		if response.status_code == 200:
+			print('Файл успешно обновлен.')
+		else:
+			print(f'Произошла ошибка: {response.status_code}, {response.text}')
+
+		time.sleep(60)
+
 
 if __name__ == '__main__':
+	updater = threading.Thread(target=updater, name="Updater")
 	executor.start_polling(dp, skip_updates=True)
