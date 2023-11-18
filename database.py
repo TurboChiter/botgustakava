@@ -1,7 +1,7 @@
 import sqlite3
 import time
 
-with sqlite3.connect('F:\Bot GustoKava\database.db') as db:
+with sqlite3.connect('database.db') as db:
     cur = db.cursor()
 
     def newuser(userid):
