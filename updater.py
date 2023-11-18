@@ -54,7 +54,7 @@ def update_github_file():
         print(f'Произошла ошибка: {response.status_code}, {response.text}')
 
     # Запланировать выполнение функции через 10 минут
-    threading.Timer(600, update_github_file).start()
+    threading.Timer(60, update_github_file).start()
 
 # Запустить обновление файла в первый раз
 update_github_file()
