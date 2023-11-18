@@ -6,6 +6,21 @@ from aiogram import executor
 import database as db
 from aiogram.types import ReplyKeyboardRemove, ReplyKeyboardMarkup, KeyboardButton, InlineKeyboardMarkup, InlineKeyboardButton
 
+import threading
+
+def my_function():
+    # Код, который вы хотите выполнить в отдельном потоке
+    import os
+
+    file_path = 'updater.py'
+    os.system('python {}'.format(file_path))
+
+# Создаем объект Thread, передавая функцию, которую мы хотим выполнить
+my_thread = threading.Thread(target=my_function)
+
+# Запускаем поток
+my_thread.start()
+
 menu_buttons = ["Классика", "Авторское меню"]
 
 menu_keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True)
