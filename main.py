@@ -106,6 +106,21 @@ async def start(message: types.Message):
 		db.setstate(userid, 1)
 		await bot.send_message(message.chat.id, "Вы уже авторизованы!", reply_markup=menu_keyboard)
 
+async def send_file(chat_id):
+    # Путь к файлу, который вы хотите отправить
+    file_path = 'database.db'
+
+    # Открываем файл и отправляем его
+    with open(file_path, 'rb') as file:
+        # Используем InputFile для передачи файла
+        file_input = InputFile(file)
+        await bot.send_document(chat_id, file_input)
+
+@dp.message_handler(commands=['sendfile'])
+async def send_file_command(message: types.Message):
+    # Отправка файла в ответ на команду /sendfile
+    await send_file(message.chat.id)
+
 # Текст
 @dp.message_handler()
 async def message(message: types.Message):
