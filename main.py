@@ -144,7 +144,7 @@ async def message(message: types.Message):
 		state = db.getstate(userid)
 		if text == "Выгрузить базу":
 			await updater(userid)
-		if text == "Назад":
+		elif text == "Назад":
 			#state = db.getstate(userid)
 			#if state == 3:
 				#db.setstate(userid, 2)
