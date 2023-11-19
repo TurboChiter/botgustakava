@@ -1,14 +1,11 @@
 #--coding: utf-8--
 import logging
 from aiogram import Bot, Dispatcher, types
-#from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 from aiogram import executor
 import database as db
 from aiogram.types import ReplyKeyboardRemove, ReplyKeyboardMarkup, KeyboardButton, InlineKeyboardMarkup, InlineKeyboardButton, InputFile
 
-import threading
-
-menu_buttons = ["Классика", "Авторское меню", "Выгрузить базу"]
+menu_buttons = ["Классика", "Авторское меню", "Мой плюс", "Выгрузить базу"]
 
 menu_keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True)
 for button in menu_buttons:
@@ -101,10 +98,10 @@ dp = Dispatcher(bot)
 async def start(message: types.Message):
 	userid = message.from_user.id
 	if not db.check(userid):
-		await bot.send_message(message.chat.id, "Привет, для авторизации введи код: ")
+		await bot.send_message(message.chat.id, "👋 Привет, для авторизации введи код: ")
 	else:
 		db.setstate(userid, 1)
-		await bot.send_message(message.chat.id, "Вы уже авторизованы!", reply_markup=menu_keyboard)
+		await bot.send_message(message.chat.id, "Вы уже авторизованы 😊", reply_markup=menu_keyboard)
 
 async def send_file(chat_id):
     # Путь к файлу, который вы хотите отправить
@@ -116,11 +113,6 @@ async def send_file(chat_id):
         file_input = InputFile(file)
         await bot.send_document(chat_id, file_input)
 
-@dp.message_handler(commands=['sendfile'])
-async def send_file_command(message: types.Message):
-    # Отправка файла в ответ на команду /sendfile
-    await send_file(message.chat.id)
-
 # Текст
 @dp.message_handler()
 async def message(message: types.Message):
@@ -130,55 +122,53 @@ async def message(message: types.Message):
 	#-----------
 	if not db.check(userid):
 		file = open("users.txt", "rb")
-		codes = str(file.read()).replace("b", "").replace("'", "").split("\\r\\n")
+		codes = str(file.read())
 		print(codes)
 		if message.text in codes:
 			db.newuser(userid)
-			await bot.send_message(message.chat.id, "Вы успешно авторизовались!", reply_markup=menu_keyboard)
+			db.setstate(userid, 1)
+			await bot.send_message(message.chat.id, "Вы успешно авторизовались! 😊", reply_markup=menu_keyboard)
 		else:
-			await bot.send_message(message.chat.id, "Вас нет в базе данных!")
+			await bot.send_message(message.chat.id, "Вас нет в базе данных 😕")
 		print(type(message.text), type(codes[0]))
 	#-----------
 
 	elif db.check(userid):
 		state = db.getstate(userid)
-		if text == "Выгрузить базу":
+		if text == "Мой плюс":
+			milk = db.getmilk(userid)
+			await bot.send_message(userid, f"Ваш плюс по молоку: {milk} мл. 🥛")
+		elif text == "Выгрузить базу":
 			await send_file(message.chat.id)
-			#await updater(userid)
 		elif text == "Назад":
-			#state = db.getstate(userid)
-			#if state == 3:
-				#db.setstate(userid, 2)
-				#db.setsize(userid, 1)
-				#await bot.send_message(message.from_user.id, "Выберите размер: ", reply_markup=size_keyboard)
 			if state == 3 or state == 2 or state == 1: #el
 				db.setstate(userid, 1)
 				db.setsize(userid, 1)
 				db.setdrink(userid, "")
-				await bot.send_message(message.from_user.id, "Выберите раздел: ", reply_markup=menu_keyboard)
+				await bot.send_message(message.from_user.id, "🗒 Выберите раздел: ", reply_markup=menu_keyboard)
 		elif state == 0:
 			db.setstate(userid, 1)
-			await bot.send_message(message.chat.id, "Выберите раздел: ", reply_markup=menu_keyboard)
+			await bot.send_message(message.chat.id, "🗒 Выберите раздел: ", reply_markup=menu_keyboard)
 		elif state == 1:
 			if text == "Классика":
 				db.setstate(userid, 2)
-				await bot.send_message(message.from_user.id, "Выберите напиток: ", reply_markup=classic_menu_keyboard)
+				await bot.send_message(message.from_user.id, "☕️ Выберите напиток: ", reply_markup=classic_menu_keyboard)
 			elif text == "Авторское меню":
 				db.setstate(userid, 2)
-				await bot.send_message(message.from_user.id, "Выберите напиток: ", reply_markup=custom_menu_keyboard)
+				await bot.send_message(message.from_user.id, "☕️ Выберите напиток: ", reply_markup=custom_menu_keyboard)
 			else:
-				await bot.send_message(message.from_user.id, "Выберите раздел!")
+				await bot.send_message(message.from_user.id, "Выберите раздел 😕")
 		elif state == 2:
 			if text in classic_menu:
 				db.setdrink(userid, text)
 				db.setstate(userid, 3)
-				await bot.send_message(message.from_user.id, "Выберите размер: ", reply_markup=size_keyboard)
+				await bot.send_message(message.from_user.id, "📏 Выберите размер: ", reply_markup=size_keyboard)
 			elif text in custom_menu:
 				db.setdrink(userid, text)
 				db.setstate(userid, 3)
-				await bot.send_message(message.from_user.id, "Выберите размер: ", reply_markup=size_keyboard)
+				await bot.send_message(message.from_user.id, "📏 Выберите размер: ", reply_markup=size_keyboard)
 			else:
-				await bot.send_message(message.from_user.id, "Выберите напиток!")
+				await bot.send_message(message.from_user.id, "Выберите напиток 😕")
 		elif state == 3:
 			if text in size_buttons:
 				drink = db.getdrink(userid)
@@ -186,23 +176,23 @@ async def message(message: types.Message):
 					if drink in classic_dict_small:
 						db.setsize(userid, 1)
 						db.setstate(userid, 4)
-						await bot.send_message(message.chat.id, f"{drink}, {text}, налитое кол-во молока: ", reply_markup=ReplyKeyboardRemove())
+						await bot.send_message(message.chat.id, f"☕️ {text} {drink.lower()}, введите налитое кол-во молока 🥛: ", reply_markup=ReplyKeyboardRemove())
 					elif drink not in classic_dict_small:
-						await bot.send_message(message.chat.id, f"Напитка такого размера нет.", reply_markup=size_keyboard)
+						await bot.send_message(message.chat.id, f"Напитка такого размера нет. 😕", reply_markup=size_keyboard)
 				if text == "Средний":
 					if drink in classic_dict_middle:
 						db.setsize(userid, 2)
 						db.setstate(userid, 4)
-						await bot.send_message(message.chat.id, f"{drink}, {text}, налитое кол-во молока: ", reply_markup=ReplyKeyboardRemove())
+						await bot.send_message(message.chat.id, f"☕️ {text} {drink.lower()}, введите налитое кол-во молока 🥛: ", reply_markup=ReplyKeyboardRemove())
 					elif drink not in classic_dict_middle:
-						await bot.send_message(message.chat.id, f"Напитка такого размера нет.", reply_markup=size_keyboard)
+						await bot.send_message(message.chat.id, f"Напитка такого размера нет. 😕", reply_markup=size_keyboard)
 				if text == "Большой":
 					if drink in classic_dict_large:
 						db.setsize(userid, 3)
 						db.setstate(userid, 4)
-						await bot.send_message(message.chat.id, f"{drink}, {text}, налитое кол-во молока: ", reply_markup=ReplyKeyboardRemove())
+						await bot.send_message(message.chat.id, f"☕️ {text} {drink.lower()}, введите налитое кол-во молока 🥛: ", reply_markup=ReplyKeyboardRemove())
 					elif drink not in classic_dict_large:
-						await bot.send_message(message.chat.id, f"Напитка такого размера нет.", reply_markup=size_keyboard)
+						await bot.send_message(message.chat.id, f"Напитка такого размера нет. 😕", reply_markup=size_keyboard)
 		elif state == 4:
 			drink = db.getdrink(userid)
 			size = db.getsize(userid)
@@ -214,85 +204,26 @@ async def message(message: types.Message):
 				db.setstate(userid, 1)
 				db.setdrink(userid, "")
 				db.setsize(userid, 1)
-				await bot.send_message(message.from_user.id, f"Молоко ({plus} мл.) записано в базу! Ваш общий плюс: {milk} мл.", reply_markup=menu_keyboard)
+				await bot.send_message(message.from_user.id, f"🥛 Молоко ({plus} мл.) записано в базу! Ваш общий плюс: {milk} мл. 😊", reply_markup=menu_keyboard)
 			if size == 2:
 				plus = int(classic_dict_middle.get(drink))-int(message.text)
 				milk = db.getmilk(userid)
 				db.setmilk(userid, milk+plus)
+				milk = db.getmilk(userid)
 				db.setstate(userid, 1)
 				db.setdrink(userid, "")
 				db.setsize(userid, 1)
-				await bot.send_message(message.from_user.id, f"Молоко ({plus} мл.) записано в базу! Ваш общий плюс: {milk} мл.", reply_markup=menu_keyboard)
+				await bot.send_message(message.from_user.id, f"🥛 Молоко ({plus} мл.) записано в базу! Ваш общий плюс: {milk} мл. 😊", reply_markup=menu_keyboard)
 			if size == 3:
 				plus = int(classic_dict_large.get(drink))-int(message.text)
 				milk = db.getmilk(userid)
 				db.setmilk(userid, milk+plus)
+				milk = db.getmilk(userid)
 				db.setstate(userid, 1)
 				db.setdrink(userid, "")
 				db.setsize(userid, 1)
-				await bot.send_message(message.from_user.id, f"Молоко ({plus} мл.) записано в базу! Ваш общий плюс: {milk} мл.", reply_markup=menu_keyboard)
-
-			
-async def updater(chatid):
-    import requests
-    import threading
-    import base64
-    import time
-
-    # Параметры аутентификации GitHub
-    username = 'TurboChiter'
-    token = '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'
-
-    # Параметры репозитория и файла
-    repo_owner = 'TurboChiter'
-    repo_name = 'botgustakava'
-    file_path_in_repo = 'database.db'
-    local_file_path = 'database.db'
-
-    # URL для загрузки файла
-    url = f'https://api.github.com/repos/{repo_owner}/{repo_name}/contents/{file_path_in_repo}'
-
-    # Чтение содержимого файла
-    with open(local_file_path, 'rb') as file:
-        content = file.read()
-
-    # Кодирование содержимого в base64
-    content_base64 = base64.b64encode(content).decode('utf-8')
-
-    # Заголовки запроса с параметрами аутентификации
-    headers = {
-        'Authorization': f'token {token}',
-        'Content-Type': 'application/json',
-    }
-
-    # Параметры запроса
-    params = {
-        'message': 'Обновление файла',
-        'content': content_base64,
-        'sha': None
-    }
-
-    # Получение информации о файле для получения текущего SHA
-    response = requests.get(url)
-    response_json = response.json()
-    sha = response_json['sha']
-    print(f"SHA: {sha}")
-    params['sha'] = sha
-
-    # Обновление файла
-    response = requests.put(url, headers=headers, json=params)
-
-    # Печать результата
-    if response.status_code == 200:
-        print('Файл успешно обновлен.')
-        await bot.send_message(chatid, "База успешно выгружена")
-    else:
-        print(f'Произошла ошибка: {response.status_code}, {response.text}')
-        await bot.send_message(chatid, f'Произошла ошибка: {response.status_code}, {response.text}')
-        
+				await bot.send_message(message.from_user.id, f"🥛 Молоко ({plus} мл.) записано в базу! Ваш общий плюс: {milk} мл. 😊", reply_markup=menu_keyboard)
 
 
 if __name__ == '__main__':
-    #updater = threading.Thread(target=updater, name="Updater")
-    #updater.start()
     executor.start_polling(dp, skip_updates=True)
