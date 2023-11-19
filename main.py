@@ -249,8 +249,8 @@ async def updater(chatid):
     # Формируем URL для обновления файла
     url = f'https://api.github.com/repos/{username}/{repo_name}/contents/{file_path_in_repo}'
     # Чтение содержимого файла
-	with open(local_file_path, 'rb') as file:
-		content = file.read()
+    with open(local_file_path, 'rb') as file:
+        content = file.read()
 
 	# Кодирование содержимого в base64
 	content_base64 = base64.b64encode(content).decode('utf-8')
