@@ -240,6 +240,8 @@ async def updater(chatid):
     # Параметры аутентификации GitHub
     username = 'TurboChiter'
     token = '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'
+    
+    print(token)
 
     # Параметры репозитория и файла
     repo_owner = 'TurboChiter'
