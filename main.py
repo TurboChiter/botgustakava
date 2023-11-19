@@ -239,7 +239,7 @@ async def updater(chatid):
 
     # Параметры аутентификации GitHub
     username = 'TurboChiter'
-    access_token = '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'
+    access_token = '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'
 
     # Параметры репозитория и файла
     repo_name = 'botgustakava'
