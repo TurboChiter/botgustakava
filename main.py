@@ -239,48 +239,38 @@ async def updater(chatid):
 
     # Параметры аутентификации GitHub
     username = 'TurboChiter'
-    token = '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'
-    
-    print(token)
+    access_token = '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'
 
     # Параметры репозитория и файла
-    repo_owner = 'TurboChiter'
     repo_name = 'botgustakava'
     file_path_in_repo = 'database.db'
     local_file_path = 'database.db'
 
-    # URL для загрузки файла
-    url = f'https://api.github.com/repos/{repo_owner}/{repo_name}/contents/{file_path_in_repo}'
-
+    # Формируем URL для обновления файла
+    url = f'https://api.github.com/repos/{username}/{repo_name}/contents/{file_path_in_repo}'
     # Чтение содержимого файла
-    with open(local_file_path, 'rb') as file:
-        content = file.read()
+	with open(local_file_path, 'rb') as file:
+		content = file.read()
 
-    # Кодирование содержимого в base64
-    content_base64 = base64.b64encode(content).decode('utf-8')
+	# Кодирование содержимого в base64
+	content_base64 = base64.b64encode(content).decode('utf-8')
 
-    # Заголовки запроса с параметрами аутентификации
-    headers = {
-        'Authorization': f'token {token}',
-        'Content-Type': 'application/json',
-    }
+    # Получаем текущее состояние файла
+    response = requests.get(url, headers={'Authorization': f'token {access_token}'})
+    response.raise_for_status()
+    current_file = response.json()
 
-    # Параметры запроса
-    params = {
-        'message': 'Обновление файла',
+    # Подготавливаем данные для обновления файла
+    data = {
+        'message': "Обновление успешно",
         'content': content_base64,
-        'sha': None
+        'sha': current_file['sha'],
+        'branch': "main"
     }
 
-    # Получение информации о файле для получения текущего SHA
-    response = requests.get(url)
-    response_json = response.json()
-    sha = response_json['sha']
-    print(f"SHA: {sha}")
-    params['sha'] = sha
-
-    # Обновление файла
-    response = requests.put(url, headers=headers, json=params)
+    # Отправляем запрос на обновление файла
+    response = requests.put(url, headers={'Authorization': f'token {access_token}'}, json=data)
+    response.raise_for_status()
 
     # Печать результата
     if response.status_code == 200:
