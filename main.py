@@ -210,10 +210,11 @@ async def message(message: types.Message):
 				plus = int(classic_dict_small.get(drink))-int(message.text)
 				milk = db.getmilk(userid)
 				db.setmilk(userid, milk+plus)
+				milk = db.getmilk(userid)
 				db.setstate(userid, 1)
 				db.setdrink(userid, "")
 				db.setsize(userid, 1)
-				await bot.send_message(message.from_user.id, f"Молоко записано в базу! Ваш общий плюс: {milk}(+{plus}) мл.", reply_markup=menu_keyboard)
+				await bot.send_message(message.from_user.id, f"Молоко ({plus} мл.) записано в базу! Ваш общий плюс: {milk} мл.", reply_markup=menu_keyboard)
 			if size == 2:
 				plus = int(classic_dict_middle.get(drink))-int(message.text)
 				milk = db.getmilk(userid)
@@ -221,7 +222,7 @@ async def message(message: types.Message):
 				db.setstate(userid, 1)
 				db.setdrink(userid, "")
 				db.setsize(userid, 1)
-				await bot.send_message(message.from_user.id, f"Молоко записано в базу! Ваш общий плюс: {milk}(+{plus}) мл.", reply_markup=menu_keyboard)
+				await bot.send_message(message.from_user.id, f"Молоко ({plus} мл.) записано в базу! Ваш общий плюс: {milk} мл.", reply_markup=menu_keyboard)
 			if size == 3:
 				plus = int(classic_dict_large.get(drink))-int(message.text)
 				milk = db.getmilk(userid)
@@ -229,7 +230,7 @@ async def message(message: types.Message):
 				db.setstate(userid, 1)
 				db.setdrink(userid, "")
 				db.setsize(userid, 1)
-				await bot.send_message(message.from_user.id, f"Молоко записано в базу! Ваш общий плюс: {milk}(+{plus}) мл.", reply_markup=menu_keyboard)
+				await bot.send_message(message.from_user.id, f"Молоко ({plus} мл.) записано в базу! Ваш общий плюс: {milk} мл.", reply_markup=menu_keyboard)
 
 			
 async def updater(chatid):
