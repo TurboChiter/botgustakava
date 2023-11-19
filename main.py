@@ -239,7 +239,7 @@ async def updater(chatid):
 
     # Параметры аутентификации GitHub
     username = 'TurboChiter'
-    token = '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'
+    token = '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'
 
     # Параметры репозитория и файла
     repo_owner = 'TurboChiter'
