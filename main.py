@@ -253,7 +253,7 @@ async def updater(chatid):
         content = file.read()
 
 	# Кодирование содержимого в base64
-	content_base64 = base64.b64encode(content).decode('utf-8')
+    content_base64 = base64.b64encode(content).decode('utf-8')
 
     # Получаем текущее состояние файла
     response = requests.get(url, headers={'Authorization': f'token {access_token}'})
