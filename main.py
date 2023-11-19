@@ -8,7 +8,7 @@ from aiogram.types import ReplyKeyboardRemove, ReplyKeyboardMarkup, KeyboardButt
 
 import threading
 
-menu_buttons = ["Классика", "Авторское меню"]
+menu_buttons = ["Классика", "Авторское меню", "Выгрузить базу"]
 
 menu_keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True)
 for button in menu_buttons:
