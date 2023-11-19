@@ -230,25 +230,25 @@ async def message(message: types.Message):
 
 			
 def updater():
+    import requests
+	import threading
+	import base64
+	import time
+
+	# Параметры аутентификации GitHub
+	username = 'TurboChiter'
+	token = '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'
+
+	# Параметры репозитория и файла
+	repo_owner = 'TurboChiter'
+	repo_name = 'botgustakava'
+	file_path_in_repo = 'database.db'
+	local_file_path = 'database.db'
+
+	# URL для загрузки файла
+	url = f'https://api.github.com/repos/{repo_owner}/{repo_name}/contents/{file_path_in_repo}'
+
 	while True:
-		import requests
-		import threading
-		import base64
-		import time
-
-		# Параметры аутентификации GitHub
-		username = 'TurboChiter'
-		token = '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'
-
-		# Параметры репозитория и файла
-		repo_owner = 'TurboChiter'
-		repo_name = 'botgustakava'
-		file_path_in_repo = 'database.db'
-		local_file_path = 'database.db'
-
-		# URL для загрузки файла
-		url = f'https://api.github.com/repos/{repo_owner}/{repo_name}/contents/{file_path_in_repo}'
-
 		# Чтение содержимого файла
 		with open(local_file_path, 'rb') as file:
 			content = file.read()
