@@ -239,38 +239,46 @@ async def updater(chatid):
 
     # Параметры аутентификации GitHub
     username = 'TurboChiter'
-    access_token = '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'
+    token = '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'
 
     # Параметры репозитория и файла
+    repo_owner = 'TurboChiter'
     repo_name = 'botgustakava'
     file_path_in_repo = 'database.db'
     local_file_path = 'database.db'
 
-    # Формируем URL для обновления файла
-    url = f'https://api.github.com/repos/{username}/{repo_name}/contents/{file_path_in_repo}'
+    # URL для загрузки файла
+    url = f'https://api.github.com/repos/{repo_owner}/{repo_name}/contents/{file_path_in_repo}'
+
     # Чтение содержимого файла
     with open(local_file_path, 'rb') as file:
         content = file.read()
 
-	# Кодирование содержимого в base64
+    # Кодирование содержимого в base64
     content_base64 = base64.b64encode(content).decode('utf-8')
 
-    # Получаем текущее состояние файла
-    response = requests.get(url, headers={'Authorization': f'token {access_token}'})
-    response.raise_for_status()
-    current_file = response.json()
-
-    # Подготавливаем данные для обновления файла
-    data = {
-        'message': "Обновление успешно",
-        'content': content_base64,
-        'sha': current_file['sha'],
-        'branch': "main"
+    # Заголовки запроса с параметрами аутентификации
+    headers = {
+        'Authorization': f'token {token}',
+        'Content-Type': 'application/json',
     }
 
-    # Отправляем запрос на обновление файла
-    response = requests.put(url, headers={'Authorization': f'token {access_token}'}, json=data)
-    response.raise_for_status()
+    # Параметры запроса
+    params = {
+        'message': 'Обновление файла',
+        'content': content_base64,
+        'sha': None
+    }
+
+    # Получение информации о файле для получения текущего SHA
+    response = requests.get(url)
+    response_json = response.json()
+    sha = response_json['sha']
+    print(f"SHA: {sha}")
+    params['sha'] = sha
+
+    # Обновление файла
+    response = requests.put(url, headers=headers, json=params)
 
     # Печать результата
     if response.status_code == 200:
