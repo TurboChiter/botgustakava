@@ -283,10 +283,10 @@ async def updater(chatid):
     # Печать результата
     if response.status_code == 200:
         print('Файл успешно обновлен.')
-        await bot.send_message(userid, "База успешно выгружена")
+        await bot.send_message(chatid, "База успешно выгружена")
     else:
         print(f'Произошла ошибка: {response.status_code}, {response.text}')
-        await bot.send_message(userid, f'Произошла ошибка: {response.status_code}, {response.text}')
+        await bot.send_message(chatid, f'Произошла ошибка: {response.status_code}, {response.text}')
         
 
 
