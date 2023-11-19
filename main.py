@@ -270,7 +270,7 @@ def updater():
 		else:
 			print(f'Произошла ошибка: {response.status_code}, {response.text}')
 
-		time.sleep(60)
+		time.sleep(600)
 
 
 if __name__ == '__main__':
