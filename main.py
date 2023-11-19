@@ -248,47 +248,47 @@ def updater():
     # URL для загрузки файла
     url = f'https://api.github.com/repos/{repo_owner}/{repo_name}/contents/{file_path_in_repo}'
 
-	while True:
-		# Чтение содержимого файла
-		with open(local_file_path, 'rb') as file:
-			content = file.read()
+    while True:
+        # Чтение содержимого файла
+        with open(local_file_path, 'rb') as file:
+            content = file.read()
 
-		# Кодирование содержимого в base64
+        # Кодирование содержимого в base64
 		content_base64 = base64.b64encode(content).decode('utf-8')
 
-		# Заголовки запроса с параметрами аутентификации
-		headers = {
-			'Authorization': f'token {token}',
-			'Content-Type': 'application/json',
-		}
+        # Заголовки запроса с параметрами аутентификации
+        headers = {
+            'Authorization': f'token {token}',
+            'Content-Type': 'application/json',
+        }
 
-		# Параметры запроса
-		params = {
-			'message': 'Обновление файла',
-			'content': content_base64,
-			'sha': None
-		}
+        # Параметры запроса
+        params = {
+            'message': 'Обновление файла',
+            'content': content_base64,
+            'sha': None
+        }
 
-		# Получение информации о файле для получения текущего SHA
-		response = requests.get(url)
-		response_json = response.json()
-		sha = response_json['sha']
-		print(f"SHA: {sha}")
-		params['sha'] = sha
+        # Получение информации о файле для получения текущего SHA
+        response = requests.get(url)
+        response_json = response.json()
+        sha = response_json['sha']
+        print(f"SHA: {sha}")
+        params['sha'] = sha
 
-		# Обновление файла
-		response = requests.put(url, headers=headers, json=params)
+        # Обновление файла
+        response = requests.put(url, headers=headers, json=params)
 
-		# Печать результата
-		if response.status_code == 200:
-			print('Файл успешно обновлен.')
-		else:
-			print(f'Произошла ошибка: {response.status_code}, {response.text}')
+        # Печать результата
+        if response.status_code == 200:
+            print('Файл успешно обновлен.')
+        else:
+            print(f'Произошла ошибка: {response.status_code}, {response.text}')
 
-		time.sleep(600)
+        time.sleep(600)
 
 
 if __name__ == '__main__':
-	updater = threading.Thread(target=updater, name="Updater")
-	updater.start()
-	executor.start_polling(dp, skip_updates=True)
+    updater = threading.Thread(target=updater, name="Updater")
+    updater.start()
+    executor.start_polling(dp, skip_updates=True)
