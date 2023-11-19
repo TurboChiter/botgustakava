@@ -4,8 +4,7 @@ from aiogram import Bot, Dispatcher, types
 #from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 from aiogram import executor
 import database as db
-from aiogram.types import ReplyKeyboardRemove, ReplyKeyboardMarkup, KeyboardButton, InlineKeyboardMarkup, InlineKeyboardButton
-from aiogram import InputFile
+from aiogram.types import ReplyKeyboardRemove, ReplyKeyboardMarkup, KeyboardButton, InlineKeyboardMarkup, InlineKeyboardButton, InputFile
 
 import threading
 
