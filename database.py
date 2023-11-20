@@ -5,7 +5,7 @@ with sqlite3.connect('database.db') as db:
     cur = db.cursor()
 
     def newuser(userid):
-        cur.execute(" INSERT INTO base (userid, admin, milk, state, drink, size) VALUES(?, ?, ?, ?, ?, ?) ", (userid, 1, 0, 0, "", 1))
+        cur.execute(" INSERT INTO base (userid, admin, milk, state, drink, size) VALUES(?, ?, ?, ?, ?, ?) ", (userid, 0, 0, 0, "", 1))
         return db.commit()
 
     def check(userid):
