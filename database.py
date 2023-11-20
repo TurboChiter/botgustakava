@@ -43,6 +43,10 @@ with sqlite3.connect('database.db') as db:
     def setmilk(userid, milk):
         cur.execute(" UPDATE base SET milk=? WHERE userid=?", (milk, userid))
         return db.commit()
+        
+    def getadmin(userid):
+        admin = cur.execute(" SELECT admin FROM base WHERE userid=? ", (userid,)).fetchone()
+        return admin[0]
 
     def getbase():
         #cur.
