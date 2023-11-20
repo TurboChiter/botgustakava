@@ -140,14 +140,14 @@ async def message(message: types.Message):
 			milk = db.getmilk(userid)
 			await bot.send_message(userid, f"Ваш плюс по молоку: {milk} мл. 🥛")
 		elif text == "Выгрузить базу":
-            if db.getadmin(userid) == 1:
-			    await send_file(message.chat.id)
+			if db.getadmin(userid) == 1:
+				await send_file(message.chat.id)
 		elif text == "Назад":
 			if state == 3 or state == 2 or state == 1: #el
 				db.setstate(userid, 1)
 				db.setsize(userid, 1)
 				db.setdrink(userid, "")
-                if db.getadmin(userid) == 0:
+				if db.getadmin(userid) == 0:
 					await bot.send_message(message.from_user.id, "🗒 Выберите раздел: ", reply_markup=menu_keyboard)
             	else:
                 	await bot.send_message(message.chat.id, "🗒 Выберите раздел: ", reply_markup=menu_admin_keyboard)
