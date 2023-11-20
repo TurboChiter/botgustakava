@@ -109,7 +109,7 @@ async def start(message: types.Message):
 		if db.getadmin(userid) == 0:
 			await bot.send_message(message.chat.id, "Вы уже авторизованы 😊", reply_markup=menu_keyboard)
 		else:
-            await bot.send_message(message.chat.id, "Вы уже авторизованы 😊", reply_markup=menu_admin_keyboard)
+			await bot.send_message(message.chat.id, "Вы уже авторизованы 😊", reply_markup=menu_admin_keyboard)
 
 async def send_file(chat_id):
     # Путь к файлу, который вы хотите отправить
