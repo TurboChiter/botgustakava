@@ -149,14 +149,14 @@ async def message(message: types.Message):
 				db.setdrink(userid, "")
 				if db.getadmin(userid) == 0:
 					await bot.send_message(message.from_user.id, "🗒 Выберите раздел: ", reply_markup=menu_keyboard)
-            	else:
+				else:
                 	await bot.send_message(message.chat.id, "🗒 Выберите раздел: ", reply_markup=menu_admin_keyboard)
 		elif state == 0:
 			db.setstate(userid, 1)
-            if db.getadmin(userid) == 0:
+			if db.getadmin(userid) == 0:
                 await bot.send_message(message.chat.id, "🗒 Выберите раздел: ", reply_markup=menu_keyboard)
-            else:
-                await bot.send_message(message.chat.id, "🗒 Выберите раздел: ", reply_markup=menu_admin_keyboard)
+			else:
+				await bot.send_message(message.chat.id, "🗒 Выберите раздел: ", reply_markup=menu_admin_keyboard)
 		elif state == 1:
 			if text == "Классика":
 				db.setstate(userid, 2)
