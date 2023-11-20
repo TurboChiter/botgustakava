@@ -132,7 +132,10 @@ async def message(message: types.Message):
 		if message.text in codes:
 			db.newuser(userid)
 			db.setstate(userid, 1)
-			await bot.send_message(message.chat.id, "Вы успешно авторизовались! 😊", reply_markup=menu_keyboard)
+			if db.getadmin(userid) == 0:
+				await bot.send_message(message.chat.id, "Вы успешно авторизовались! 😊", reply_markup=menu_keyboard)
+			else:
+				await bot.send_message(message.chat.id, "Вы успешно авторизовались! 😊", reply_markup=menu_admin_keyboard)
 		else:
 			await bot.send_message(message.chat.id, "Вас нет в базе данных 😕")
 		print(type(message.text), type(codes[0]))
