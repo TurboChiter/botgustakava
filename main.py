@@ -5,7 +5,8 @@ from aiogram import executor
 import database as db
 from aiogram.types import ReplyKeyboardRemove, ReplyKeyboardMarkup, KeyboardButton, InlineKeyboardMarkup, InlineKeyboardButton, InputFile
 
-menu_buttons = ["Классика", "Авторское меню", "Мой плюс", "Выгрузить базу"]
+menu_buttons = ["Классика", "Авторское меню", "Мой плюс"]
+menu_admin_buttons = ["Классика", "Авторское меню", "Мой плюс", "Выгрузить базу"]
 
 menu_keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True)
 for button in menu_buttons:
