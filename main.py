@@ -11,6 +11,10 @@ menu_admin_buttons = ["Классика", "Авторское меню", "Мой
 menu_keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True)
 for button in menu_buttons:
         menu_keyboard.add(button)
+        
+menu_admin_keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True)
+for button in menu_admin_buttons:
+        menu_keyboard.add(button)
 
 classic_menu = [
     "Капучино",
